@@ -70,14 +70,21 @@ public class GraphView extends LinearLayout {
         listeGraph = new ArrayList<List>();
 
         graphView = (com.jjoe64.graphview.GraphView) findViewById(R.id.graph);
-        graphView.getViewport().setYAxisBoundsManual(true);
-        graphView.getViewport().setMinY(0);
-        graphView.getViewport().setMaxY(255);
 
-        graphView.getViewport().setXAxisBoundsManual(true);
-        graphView.getViewport().setMinX(0);
+        setRange();
 
         graphView.getViewport().setScalable(true);
+    }
+
+    private void setRange()
+    {
+        graphView.getViewport().setMinY(0);
+        graphView.getViewport().setMaxY(255);
+        graphView.getViewport().setYAxisBoundsManual(true);
+
+        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMaxX(2000);
+        graphView.getViewport().setXAxisBoundsManual(true);
     }
 
     public void setObjetFrappe(ObjetFrappe obj){objetFrappe = obj;}
@@ -85,12 +92,11 @@ public class GraphView extends LinearLayout {
     public void display(OnDataPointTapListener listener)
     {
         graphView.removeAllSeries();
-
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.getforceVecteurFrappeNum()));
-
         series.setOnDataPointTapListener(listener);
-
         graphView.addSeries(series);
+
+        setRange();
     }
 
     private DataPoint[] getPoints(List<Float> x, List<Float> y)

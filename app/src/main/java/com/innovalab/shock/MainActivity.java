@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements OnDataPointTapListener
     private BluetoothAdapter mBtAdapter = null;
     private ArrayAdapter<String> listAdapter;
     private Button btnConnectDisconnect, btnStart;
-    private TextView nbSamples;
+    private TextView info;
 
     private ObjetFrappe objetFrappe;
     private boolean receivingData;
@@ -127,8 +127,8 @@ public class MainActivity extends Activity implements OnDataPointTapListener
         cible = (CibleVue)findViewById(R.id.cible);
         service_init();
 
-        nbSamples = (TextView) findViewById(R.id.nbSamples);
-        nbSamples.setText("nbSamples : ");
+        info = (TextView) findViewById(R.id.info);
+        info.setText("selected sample : 0");
        
         // Handle Disconnect & Connect button
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +202,7 @@ public class MainActivity extends Activity implements OnDataPointTapListener
         graphView.display(this);
         cible.display();
 
-        nbSamples.setText("nbSamples : ?");
+        info.setText("selected sample : 0");
     }
     
     //UART service connected/disconnected
@@ -292,7 +292,7 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                                  graphView.display(MainActivity.this);
                                  cible.display();
                                  Log.i("Data","Z");
-                                 nbSamples.setText("nbSamples : "+objetFrappe.getforceVecteurFrappeNum().size());
+
                                  return;
                              }
                              else
@@ -306,7 +306,7 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                                      objetFrappe.ajouterEchantillon(new Vector3(value_0, value_1, value_2), n);
                                      n++;
 
-                                     if(n%100 == 0)
+                                     if(n%20 == 0)
                                      {
                                          //showMessage("Received : "+n);
                                          graphView.display(MainActivity.this);
@@ -481,7 +481,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
     {
         cible.setPointOnTime((int)dataPoint.getX());
         cible.display();
-        Toast.makeText(this, "Point set : " + (int)dataPoint.getX() , Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "point set");
+        info.setText("selected sample : "+(int)dataPoint.getX());
     }
 }
