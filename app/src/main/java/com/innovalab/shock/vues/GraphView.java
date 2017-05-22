@@ -92,7 +92,10 @@ public class GraphView extends LinearLayout {
     public void display(OnDataPointTapListener listener)
     {
         graphView.removeAllSeries();
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.getforceVecteurFrappeNum()));
+
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.lissage()));
+        //LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.getforceVecteurFrappeNum()));
         series.setOnDataPointTapListener(listener);
         graphView.addSeries(series);
 
