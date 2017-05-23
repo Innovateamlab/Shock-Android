@@ -101,9 +101,9 @@ public class ObjetFrappe extends Observable implements Serializable {
         m_capteurs.add(new Vector3(Integer.parseInt(infosCarte), 0, 0));
     }
 
-    public void ajouterEchantillon(Vector3 vector, int i){
-        m_puissances.add((vector.x+vector.y+vector.z)/3);
-        m_temps.add((float)i);
+    public void ajouterEchantillon(Vector3 vector, int i) {
+        m_puissances.add((vector.x + vector.y + vector.z) / 3);
+        m_temps.add((float) i);
         m_c1.add(vector.x);
         m_c2.add(vector.y);
         m_c3.add(vector.z);
@@ -120,33 +120,61 @@ public class ObjetFrappe extends Observable implements Serializable {
     }
 
 
-    public float[] getG_position(int t){
-        if(t > m_capteurs.size()-1)
-            return new float[]{0,0};
+    public float[] getG_position(int t) {
+        if (t > m_capteurs.size() - 1)
+            return new float[]{0, 0};
         return getG_position(m_capteurs.get(t));
     }
 
-    public float[] getG_position(Vector3 vector3){
+    public float[] getG_position(Vector3 vector3) {
         float[] m_position = new float[2];
         float x_c1 = 0;
-        float x_c2 = 110*0.86f;
-        float x_c3 = 110*-0.86f;
+        float x_c2 = 110 * 0.86f;
+        float x_c3 = 110 * -0.86f;
         float y_c1 = 110;
-        float y_c2 = 110*-0.5f;
-        float y_c3 = 110*-0.5f;
+        float y_c2 = 110 * -0.5f;
+        float y_c3 = 110 * -0.5f;
         float m_c1 = vector3.x;
         float m_c2 = vector3.y;
         float m_c3 = vector3.z;
-        float sum = m_c1+m_c2+m_c3;
-        float x_g = (m_c1*x_c1+m_c2*x_c2+m_c3*x_c3)/sum;
-        float y_g = (m_c1*y_c1+m_c2*y_c2+m_c3*y_c3)/sum;
+        float sum = m_c1 + m_c2 + m_c3;
+        float x_g = (m_c1 * x_c1 + m_c2 * x_c2 + m_c3 * x_c3) / sum;
+        float y_g = (m_c1 * y_c1 + m_c2 * y_c2 + m_c3 * y_c3) / sum;
         m_position[0] = x_g;
         m_position[1] = y_g;
         return m_position;
     }
 
-    public List<Float> lissage () {
+
+    public List<Float> calculLissage(List<Float> parametreListe, int n) {
         List<Float> moyennage = new ArrayList<Float>();
+        int i, j;
+        float x;
+
+        for (i = 0; i < 5; i++) {
+            moyennage.add((float) 0);
+        }
+        for (i = 5; i < parametreListe.size() - 5; i++) {
+            x = 0;
+            for (j = 0; j < 10; j++) {
+                x = x + parametreListe.get(i - 5 + j);
+            }
+            moyennage.add((x + moyennage.get(i - 1)) / 11.0f);
+        }
+        for (i = 0; i < 5; i++) {
+            moyennage.add((float) 0);
+        }
+
+        if (n > 0) {
+            return (calculLissage(moyennage, n--));
+        } else {
+            return (moyennage);
+        }
+    }
+
+
+    public List<Float> lissage() {
+        /*List<Float> moyennage = new ArrayList<Float>();
         List<Float> moyennage2 = new ArrayList<Float>();
         List<Float> moyennage3 = new ArrayList<Float>();
         List<Float> moyennage4 = new ArrayList<Float>();
@@ -154,11 +182,11 @@ public class ObjetFrappe extends Observable implements Serializable {
         List<Float> moyennage6 = new ArrayList<Float>();
         List<Float> moyennage7 = new ArrayList<Float>();
         List<Float> moyennage8 = new ArrayList<Float>();
-        List<Float> moyennage9 = new ArrayList<Float>();
+        List<Float> moyennage9 = new ArrayList<Float>();*/
         /*List<Float> position = new ArrayList<Float>();
         List<Float> positionSuppose = new ArrayList<Float>();*/
-        int i,j,k;
-        float x;
+        /*int i,j;
+        float x;*/
         /*float a,b;*/
 
 
@@ -235,7 +263,11 @@ public class ObjetFrappe extends Observable implements Serializable {
             position.add((positionSuppose.get(i-2) + m_puissances.get(i))/2);
         }*/
 
-        for(i=0;i<5;i++){
+
+
+
+
+        /*for(i=0;i<5;i++){
             moyennage.add((float) 0);
         }
         for(i=5;i<m_puissances.size()-5;i++){
@@ -361,6 +393,7 @@ public class ObjetFrappe extends Observable implements Serializable {
             moyennage9.add((float) 0);
         }
 
-        return moyennage9;
+        return moyennage9;*/
+        return (calculLissage(m_puissances, 9));
     }
 }
