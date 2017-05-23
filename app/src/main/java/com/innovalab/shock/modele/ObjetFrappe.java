@@ -166,7 +166,7 @@ public class ObjetFrappe extends Observable implements Serializable {
         }
 
         if (n > 0) {
-            return (calculLissage(moyennage, n--));
+            return (calculLissage(moyennage, n-1));
         } else {
             return (moyennage);
         }
@@ -394,6 +394,6 @@ public class ObjetFrappe extends Observable implements Serializable {
         }
 
         return moyennage9;*/
-        return (calculLissage(m_puissances, 9));
+        return (calculLissage(m_puissances, 18));
     }
 }
