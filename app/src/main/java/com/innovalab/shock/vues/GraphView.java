@@ -41,10 +41,7 @@ public class GraphView extends LinearLayout {
 
     private ObjetFrappe objetFrappe;
 
-    private List<List> listeGraph;
-    private ListView lv;
     private com.jjoe64.graphview.GraphView graphView;
-    public float[] pointTap;
 
     public GraphView(Context context) {
         super(context);
@@ -66,8 +63,6 @@ public class GraphView extends LinearLayout {
     {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.graph_view, this, true);
-        //lv = (ListView) findViewById(R.id.listViewGraph);
-        listeGraph = new ArrayList<List>();
 
         graphView = (com.jjoe64.graphview.GraphView) findViewById(R.id.graph);
 
@@ -93,9 +88,7 @@ public class GraphView extends LinearLayout {
     {
         graphView.removeAllSeries();
 
-
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.lissage()));
-        //LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(getPoints(objetFrappe.getTemps(), objetFrappe.getforceVecteurFrappeNum()));
         series.setOnDataPointTapListener(listener);
         graphView.addSeries(series);
 

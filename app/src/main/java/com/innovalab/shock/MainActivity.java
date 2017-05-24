@@ -51,7 +51,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,11 +59,9 @@ import com.innovalab.shock.modele.Vector3;
 import com.innovalab.shock.vues.CibleVue;
 import com.innovalab.shock.vues.GraphView;
 import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
-import static java.security.AccessController.getContext;
 
 public class MainActivity extends Activity implements OnDataPointTapListener
 {
@@ -76,8 +73,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private static final int STATE_OFF = 10;
 
-    TextView mRemoteRssiVal;
-    RadioGroup mRg;
     private int mState = UART_PROFILE_DISCONNECTED;
     private UartService mService = null;
     private BluetoothDevice mDevice = null;
@@ -88,28 +83,21 @@ public class MainActivity extends Activity implements OnDataPointTapListener
 
     private ObjetFrappe objetFrappe;
     private boolean receivingData;
-    private int[] buffer;
-    private int count, n;
-
-    private float[] pointTap = new float[2];
+    private int n;
 
     private GraphView graphView;
     private CibleVue cible;
 
-    //MyActivity myActivity = (MyActivity)getContext();
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         receivingData = false;
-        count = 0;
         n = 0;
-        buffer = new int[3];
 
         objetFrappe = new ObjetFrappe();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        //setContentView(cible);
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBtAdapter == null) {
@@ -143,7 +131,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                 	if (btnConnectDisconnect.getText().equals("Connect")){
                 		
                 		//Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
-                		
             			Intent newIntent = new Intent(MainActivity.this, DeviceListActivity.class);
             			startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
         			} else {
@@ -168,13 +155,8 @@ public class MainActivity extends Activity implements OnDataPointTapListener
 
                 if(!receivingData)
                 {
-                    n=0;
-                    count=0;
-
                     reset();
-
                     receivingData = true;
-
                     //Send 'A' to start ADC sampling
                     sendData("A");
                     Log.i("Data","A");
@@ -182,20 +164,11 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                 }
             }
         });
-       /* LineGraphSeries series = graphView.get_series();
-        series.setOnDataPointTapListener(new OnDataPointTapListener() {
-            @Override
-            public void onTap(com.jjoe64.graphview.series.Series series, DataPointInterface dataPointInterface) {
-
-                pointTap[0] = (float)dataPointInterface.getX();
-                pointTap[1] = (float)dataPointInterface.getY();
-            }
-        });
-        cible.setPointOnTime((int)pointTap[0]);*/
     }
 
     private void reset()
     {
+        n=0;
         objetFrappe = new ObjetFrappe();
         graphView.setObjetFrappe(objetFrappe);
         cible.setObjetFrappe(objetFrappe);
@@ -217,13 +190,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
         }
         public void onServiceDisconnected(ComponentName classname) {
         		mService = null;
-        }
-    };
-
-    private Handler mHandler = new Handler() {
-        @Override
-        //Handler events that received from UART service 
-        public void handleMessage(Message msg) {
         }
     };
 
@@ -266,8 +232,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                      }
                  });
             }
-            
-          
           //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
              	 mService.enableTXNotification();
@@ -279,8 +243,6 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                  runOnUiThread(new Runnable() {
                      public void run() {
                          try {
-                             count++;
-
                              int value_0 = txValue[0] & 0xFF;
                              int value_1 = txValue[1] & 0xFF;
                              int value_2 = txValue[2] & 0xFF;
@@ -299,16 +261,11 @@ public class MainActivity extends Activity implements OnDataPointTapListener
                              {
                                  if(receivingData)
                                  {
-                                     String text = value_0+"  "+value_1+"  "+value_2;
-                                     String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                                     Log.i("Data", System.currentTimeMillis()+" "+n+" : "+text);
-
                                      objetFrappe.ajouterEchantillon(new Vector3(value_0, value_1, value_2), n);
                                      n++;
 
                                      if(n%20 == 0)
                                      {
-                                         //showMessage("Received : "+n);
                                          graphView.display(MainActivity.this);
                                      }
                                  }
