@@ -43,10 +43,9 @@
 
             <com.innovalab.shock.vues.CibleVue
                 android:id="@+id/cible"
-                android:layout_width="442dp"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:layout_weight="1" />
+                android:layout_width="223dp"
+                android:layout_height="234dp"
+                android:visibility="visible" />
 
         </LinearLayout>
 
@@ -58,12 +57,11 @@
 
             <com.innovalab.shock.vues.GraphView
                 android:id="@+id/graphView"
-                android:layout_width="763dp"
-                android:layout_height="424dp"
+                android:layout_width="358dp"
+                android:layout_height="218dp"
                 android:layout_span="2"
                 android:layout_column="2"
-                android:layout_marginBottom="30dp"
-                android:layout_weight="0.45" />
+                android:layout_marginBottom="30dp" />
 
             <TextView
                 android:text="TextView"

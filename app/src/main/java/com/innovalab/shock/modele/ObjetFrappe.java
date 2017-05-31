@@ -174,6 +174,6 @@ public class ObjetFrappe extends Observable implements Serializable {
 
 
     public List<Float> lissage() {
-        return (calculLissage(m_puissances, 18));
+        return (calculLissage(m_puissances, 5));
     }
 }
